@@ -5,21 +5,37 @@ import './popup.css';
 import WeatherCard from '../WeatherCard';
 import AddIcon from '@mui/icons-material/Add';
 import { Box, InputBase, Paper, IconButton, Grid } from '@material-ui/core';
+import { setStoredCities, getStoredCities } from '../utils/storage';
 
 const Test = <img src="weather.png" alt="" />;
 
-type InputBaseProps = { children: React.ReactNode };
-
 const App: React.FC<{}> = () => {
   const [cityName, setCityName] = useState<string>('');
-  const [citesList, setCitesList] = useState<string[]>(['Toronto', 'Kherson']);
+  const [citesList, setCitesList] = useState<string[]>([]);
+  useEffect(() => {
+    getStoredCities().then((cities) => {
+      setCitesList(cities);
+    });
+  }, []);
 
   const handleCityBtnClick = () => {
     if (cityName === '') {
       return;
     }
-    setCitesList([...citesList, cityName]);
-    setCityName('');
+
+    const updatedCities = [...citesList, cityName];
+    setStoredCities(updatedCities).then(() => {
+      setCityName('');
+      setCitesList(updatedCities);
+    });
+  };
+
+  const handleDeleteCityBtn = (index: number) => {
+    citesList.splice(index, 1);
+    const updatedCities = [...citesList];
+    setStoredCities(updatedCities).then(() => {
+      setCitesList(updatedCities);
+    });
   };
 
   return (
@@ -33,18 +49,25 @@ const App: React.FC<{}> = () => {
                 value={cityName}
                 onChange={(event) => setCityName(event.target.value)}
               />
-              <div onClick={handleCityBtnClick}>
+              <Box onClick={handleCityBtnClick}>
                 <IconButton>
                   <AddIcon></AddIcon>
                 </IconButton>
-              </div>
+              </Box>
             </Box>
           </Paper>
         </Grid>
       </Grid>
       {citesList.map((city, index) => {
-        return <WeatherCard city={city} key={index}></WeatherCard>;
+        return (
+          <WeatherCard
+            city={city}
+            key={index}
+            onDelete={() => handleDeleteCityBtn(index)}
+          ></WeatherCard>
+        );
       })}
+      <Box height="16px"></Box>
     </Box>
   );
 };

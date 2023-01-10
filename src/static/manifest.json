@@ -13,6 +13,15 @@
     "default_title": "Weather Extention",
     "default_icon": "weather.png"
   },
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "contextMenus",
+    "search",
+    "tabs",
+    "tts"
+  ],
   "options_page": "options.html",
   "background": {
     "service_worker": "background.js"
