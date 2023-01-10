@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Weather extention",
+  "description": "Template Extention from Udemy Course",
+  "version": "1.0",
+  "icons": {
+    "16": "weather.png",
+    "46": "weather.png",
+    "128": "weather.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Weather Extention",
+    "default_icon": "weather.png"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
