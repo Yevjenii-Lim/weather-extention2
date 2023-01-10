@@ -33,9 +33,11 @@ const App: React.FC<{}> = () => {
                 value={cityName}
                 onChange={(event) => setCityName(event.target.value)}
               />
-              <IconButton>
-                <AddIcon onClick={() => handleCityBtnClick}></AddIcon>
-              </IconButton>
+              <div onClick={handleCityBtnClick}>
+                <IconButton>
+                  <AddIcon></AddIcon>
+                </IconButton>
+              </div>
             </Box>
           </Paper>
         </Grid>
