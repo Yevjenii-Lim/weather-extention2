@@ -8,7 +8,7 @@ module.exports = {
     popup: path.resolve('src/popup/popup.tsx'),
     options: path.resolve('src/options/options.tsx'),
     background: path.resolve('src/background/background.ts'),
-    content: path.resolve('src/content/content.ts'),
+    content: path.resolve('src/content/content.tsx'),
   },
   module: {
     rules: [
@@ -50,7 +50,9 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks(chunk) {
+        return chunk.name !== 'content';
+      },
     },
   },
 };
