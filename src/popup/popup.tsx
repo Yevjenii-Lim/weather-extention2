@@ -5,16 +5,24 @@ import './popup.css';
 import WeatherCard from '../WeatherCard';
 import AddIcon from '@mui/icons-material/Add';
 import { Box, InputBase, Paper, IconButton, Grid } from '@material-ui/core';
-import { setStoredCities, getStoredCities } from '../utils/storage';
-
-const Test = <img src="weather.png" alt="" />;
+import {
+  setStoredCities,
+  getStoredCities,
+  setStoredOptions,
+  getStoredOptions,
+  LocalStorageOptions,
+} from '../utils/storage';
 
 const App: React.FC<{}> = () => {
   const [cityName, setCityName] = useState<string>('');
   const [citesList, setCitesList] = useState<string[]>([]);
+  const [options, setOptions] = useState<LocalStorageOptions | null>(null);
   useEffect(() => {
     getStoredCities().then((cities) => {
       setCitesList(cities);
+    });
+    getStoredOptions().then((options) => {
+      setOptions(options);
     });
   }, []);
 
@@ -38,9 +46,22 @@ const App: React.FC<{}> = () => {
     });
   };
 
+  const handleTempScaleBtn = () => {
+    const updateOptionsObj: LocalStorageOptions = {
+      ...options,
+      tempScale: options.tempScale === 'metric' ? 'imperial' : 'metric',
+    };
+
+    setStoredOptions(updateOptionsObj).then(() => {
+      setOptions(updateOptionsObj);
+    });
+  };
+  if (!options) {
+    return null;
+  }
   return (
     <Box mx="8px" my="16px">
-      <Grid container>
+      <Grid container justifyContent="space-evenly">
         <Grid item>
           <Paper>
             <Box px="15px" py="5px">
@@ -57,12 +78,26 @@ const App: React.FC<{}> = () => {
             </Box>
           </Paper>
         </Grid>
+        <Grid item>
+          <Paper>
+            <IconButton onClick={handleTempScaleBtn}>
+              {options.tempScale === 'metric' ? '\u2103' : '\u2109'}
+            </IconButton>
+          </Paper>
+        </Grid>
       </Grid>
+      {options.homeCity != '' && (
+        <WeatherCard
+          city={options.homeCity}
+          tempScale={options.tempScale}
+        ></WeatherCard>
+      )}
       {citesList.map((city, index) => {
         return (
           <WeatherCard
             city={city}
             key={index}
+            tempScale={options.tempScale}
             onDelete={() => handleDeleteCityBtn(index)}
           ></WeatherCard>
         );
