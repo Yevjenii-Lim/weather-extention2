@@ -3,8 +3,10 @@ import {
   fetchOpenWeatherData,
   OpenWeatherData,
   OpenWeatherTempScale,
+  getWeatherIcon,
 } from '../utils/api';
 import {
+  Grid,
   Box,
   Button,
   Card,
@@ -12,6 +14,7 @@ import {
   CardContent,
   Typography,
 } from '@material-ui/core';
+import './WeatherCard.css';
 
 const WeatherCardContainer: React.FC<{
   children: React.ReactNode;
@@ -53,7 +56,8 @@ const WeatherCard: React.FC<{
   if (cardState == 'error' || cardState == 'loading') {
     return (
       <WeatherCardContainer onDelete={onDelete}>
-        <Typography>
+        <Typography className="weatherCard-title">{city}</Typography>
+        <Typography className="weatherCard-body">
           {cardState == 'loading' ? 'Loading...' : 'Error'}
         </Typography>
       </WeatherCardContainer>
@@ -61,13 +65,29 @@ const WeatherCard: React.FC<{
   }
   return (
     <WeatherCardContainer onDelete={onDelete}>
-      <Typography variant="h5">{weatherData.name}</Typography>
-      <Typography variant="body1">
-        {Math.round(weatherData.main.temp)}
-      </Typography>
-      <Typography variant="body1">
-        Feels like: {Math.round(weatherData.main.feels_like)}
-      </Typography>
+      <Grid container justifyContent="space-around">
+        <Grid item>
+          <Typography className="weatherCard-title">
+            {weatherData.name}
+          </Typography>
+          <Typography className="weatherCard-temp">
+            {Math.round(weatherData.main.temp)}
+          </Typography>
+          <Typography variant="body1">
+            Feels like: {Math.round(weatherData.main.feels_like)}
+          </Typography>
+        </Grid>
+        <Grid item>
+          {weatherData.weather.length > 0 && (
+            <>
+              <img src={getWeatherIcon(weatherData.weather[0].icon)} alt="" />
+              <Typography className="weatherCard-body">
+                {weatherData.weather[0].description}
+              </Typography>
+            </>
+          )}
+        </Grid>
+      </Grid>
     </WeatherCardContainer>
   );
 };

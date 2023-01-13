@@ -16,10 +16,6 @@ const App: React.FC<{}> = () => {
       setIsActive(options.hasAutoOverlay);
     });
   }, []);
-  if (!options) {
-    return null;
-  }
-
   useEffect(() => {
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg === Messages.TOGGLE_OVERLAY) {
@@ -27,6 +23,10 @@ const App: React.FC<{}> = () => {
       }
     });
   }, [isActive]);
+
+  if (!options) {
+    return null;
+  }
 
   return (
     <>

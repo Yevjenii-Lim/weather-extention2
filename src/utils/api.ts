@@ -37,3 +37,7 @@ export async function fetchOpenWeatherData(
   const data: OpenWeatherData = await res.json();
   return data;
 }
+
+export function getWeatherIcon(iconCode: string): string {
+  return `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+}
